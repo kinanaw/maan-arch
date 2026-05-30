@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מען — ניהול פרויקטים</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; direction: rtl; background: #f5f4f0; color: #1a1a1a; }
+:root {
+  --blue: #185FA5; --blue-light: #E6F1FB;
+  --amber: #BA7517; --amber-light: #FAEEDA;
+  --red: #A32D2D; --red-light: #FCEBEB;
+  --green: #3B6D11; --green-light: #EAF3DE;
+  --gray-light: #F1EFE8;
+  --border: rgba(0,0,0,0.12);
+  --bg: #ffffff; --bg2: #f5f4f0;
+  --text: #1a1a1a; --text2: #666;
+  --radius: 8px; --radius-lg: 12px;
+}
+.app { max-width: 1300px; margin: 0 auto; padding: 1.5rem; }
+.topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 8px; background: var(--bg); border-radius: var(--radius-lg); padding: 1rem 1.25rem; border: 0.5px solid var(--border); }
+.topbar h1 { font-size: 20px; font-weight: 600; color: var(--text); }
+.topbar-right { display: flex; gap: 8px; align-items: center; }
+.btn { background: transparent; border: 0.5px solid var(--border); border-radius: var(--radius); padding: 6px 14px; font-size: 13px; cursor: pointer; color: var(--text); font-family: inherit; direction: rtl; }
+.btn:hover { background: var(--bg2); }
+.btn-primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+.btn-primary:hover { background: #0C447C; }
+.btn-danger { color: var(--red); border-color: var(--red); }
+.btn-danger:hover { background: var(--red-light); }
+.filter-bar { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; background: var(--bg); border-radius: var(--radius); padding: 0.75rem 1rem; border: 0.5px solid var(--border); }
+.filter-bar select, .filter-bar input { border: 0.5px solid var(--border); border-radius: var(--radius); padding: 5px 10px; font-size: 13px; background: var(--bg); color: var(--text); font-family: inherit; direction: rtl; }
+.filter-bar input { flex: 1; min-width: 140px; }
+.status-tabs { display: flex; gap: 4px; margin-bottom: 1rem; flex-wrap: wrap; }
+.tab { padding: 5px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 0.5px solid var(--border); background: var(--bg); color: var(--text2); font-family: inherit; }
+.tab.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+.table-wrap { background: var(--bg); border-radius: var(--radius-lg); border: 0.5px solid var(--border); overflow-x: auto; }
+.projects-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.projects-table th { text-align: right; padding: 10px 12px; font-weight: 500; color: var(--text2); border-bottom: 0.5px solid var(--border); font-size: 12px; white-space: nowrap; background: var(--bg2); }
+.projects-table td { padding: 10px 12px; border-bottom: 0.5px solid var(--border); vertical-align: middle; color: var(--text); }
+.projects-table tr:last-child td { border-bottom: none; }
+.projects-table tr:hover td { background: var(--bg2); cursor: pointer; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 500; white-space: nowrap; }
+.badge-red { background: var(--red-light); color: var(--red); }
+.badge-amber { background: var(--amber-light); color: var(--amber); }
+.badge-blue { background: var(--blue-light); color: var(--blue); }
+.badge-green { background: var(--green-light); color: var(--green); }
+.badge-gray { background: var(--gray-light); color: #5F5E5A; }
+.priority-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 6px; flex-shrink: 0; }
+.sync-indicator { font-size: 11px; color: var(--text2); display: flex; align-items: center; gap: 4px; }
+.sync-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.conn-status { font-size: 11px; padding: 3px 8px; border-radius: 20px; }
+.conn-ok { background: var(--green-light); color: var(--green); }
+.conn-err { background: var(--red-light); color: var(--red); }
+.conn-pending { background: var(--amber-light); color: var(--amber); }
+.empty-state { text-align: center; padding: 3rem; color: var(--text2); font-size: 14px; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: flex-start; justify-content: center; padding-top: 60px; z-index: 100; }
+.modal { background: var(--bg); border-radius: var(--radius-lg); border: 0.5px solid var(--border); padding: 1.5rem; width: 100%; max-width: 580px; max-height: 85vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+.modal h2 { font-size: 16px; font-weight: 600; margin-bottom: 1.25rem; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.form-group { display: flex; flex-direction: column; gap: 4px; }
+.form-group.full { grid-column: 1/-1; }
+.form-group label { font-size: 12px; color: var(--text2); font-weight: 500; }
+.form-group input, .form-group select, .form-group textarea { border: 0.5px solid var(--border); border-radius: var(--radius); padding: 7px 10px; font-size: 13px; background: var(--bg); color: var(--text); font-family: inherit; direction: rtl; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--blue); }
+.form-group textarea { resize: vertical; min-height: 64px; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-start; margin-top: 1.25rem; padding-top: 1rem; border-top: 0.5px solid var(--border); }
+.footer { margin-top: 0.75rem; font-size: 12px; color: var(--text2); display: flex; justify-content: space-between; padding: 0 0.25rem; }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <h1>מען — ניהול פרויקטים</h1>
+      <span class="conn-status conn-pending" id="connStatus">מתחבר...</span>
+    </div>
+    <div class="topbar-right">
+      <span class="sync-indicator">
+        <span class="sync-dot" id="syncDot" style="background:#BA7517"></span>
+        <span id="syncText">ממתין לחיבור</span>
+      </span>
+      <button class="btn btn-primary" onclick="openAdd()">+ פרויקט חדש</button>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <input type="text" id="searchInput" placeholder="חיפוש לפי שם..." oninput="renderTable()">
+    <select id="filterPriority" onchange="renderTable()">
+      <option value="">כל העדיפויות</option>
+      <option>דחוף מאוד</option><option>דחוף</option><option>חשוב</option><option>רגיל</option>
+    </select>
+    <select id="filterWorker" onchange="renderTable()"><option value="">כל הצוות</option></select>
+    <select id="filterStage" onchange="renderTable()">
+      <option value="">כל השלבים</option>
+      <option>בבקשה למידע</option><option>בבקשה להיתר</option>
+      <option>בבקרה מרחבית</option><option>בתכן</option><option>תב"ע</option>
+    </select>
+  </div>
+
+  <div class="status-tabs">
+    <button class="tab active" onclick="setTab('הכל')" id="tab-הכל">הכל (<span id="cnt-הכל">0</span>)</button>
+    <button class="tab" onclick="setTab('בטיפול משרדי')" id="tab-בטיפול משרדי">בטיפול משרדי (<span id="cnt-בטיפול משרדי">0</span>)</button>
+    <button class="tab" onclick="setTab('בטיפול גורם מאשר')" id="tab-בטיפול גורם מאשר">גורם מאשר (<span id="cnt-בטיפול גורם מאשר">0</span>)</button>
+    <button class="tab" onclick="setTab('בטיפול רישוי זמין')" id="tab-בטיפול רישוי זמין">רישוי זמין (<span id="cnt-בטיפול רישוי זמין">0</span>)</button>
+  </div>
+
+  <div class="table-wrap">
+    <table class="projects-table">
+      <thead>
+        <tr>
+          <th>שם עבודה</th><th>שלב ועדה</th><th>עדיפות</th>
+          <th>איפה עומד</th><th>מי מטפל</th><th>עדכון אחרון</th>
+          <th>מ. בקשה</th><th>הערות</th><th>לינק</th><th></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <div id="emptyState" class="empty-state" style="display:none">אין פרויקטים תואמים</div>
+  </div>
+
+  <div class="footer">
+    <span id="countLabel"></span>
+    <span id="lastSync"></span>
+  </div>
+</div>
+
+<div id="modalWrap" style="display:none">
+  <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <h2 id="modalTitle">פרויקט חדש</h2>
+      <div class="form-grid">
+        <div class="form-group full"><label>שם עבודה *</label><input id="f_name" placeholder="שם הפרויקט"></div>
+        <div class="form-group"><label>שלב בועדה</label>
+          <select id="f_stage"><option value="">—</option>
+            <option>בבקשה למידע</option><option>בבקשה להיתר</option>
+            <option>בבקרה מרחבית</option><option>בתכן</option><option>תב"ע</option>
+          </select>
+        </div>
+        <div class="form-group"><label>עדיפות</label>
+          <select id="f_priority">
+            <option>דחוף מאוד</option><option>דחוף</option>
+            <option selected>חשוב</option><option>רגיל</option>
+          </select>
+        </div>
+        <div class="form-group"><label>איפה זה עומד</label>
+          <select id="f_status">
+            <option>בטיפול משרדי</option>
+            <option>בטיפול גורם מאשר</option>
+            <option>בטיפול רישוי זמין</option>
+          </select>
+        </div>
+        <div class="form-group"><label>מי עובד על זה</label><input id="f_worker" placeholder="שם"></div>
+        <div class="form-group"><label>תאריך התחלה</label><input type="date" id="f_startDate"></div>
+        <div class="form-group"><label>מספר בקשה</label><input id="f_reqNum" placeholder="10000..."></div>
+        <div class="form-group"><label>שלב תשלום</label>
+          <select id="f_payment"><option value="">—</option>
+            <option>מקדמה</option><option>לא התקבל תשלום</option><option>שולם</option>
+          </select>
+        </div>
+        <div class="form-group full"><label>תהליך</label><input id="f_process" placeholder="תיאור השלב הנוכחי"></div>
+        <div class="form-group full"><label>הערות</label><textarea id="f_notes" placeholder="הערות נוספות"></textarea></div>
+        <div class="form-group full"><label>לינק רישוי</label><input id="f_link" placeholder="https://rishuybniya.moin.gov.il/..."></div>
+        <div class="form-group full"><label>נתיב קובץ (W:\...)</label><input id="f_filepath" placeholder="W:\aaw-2017\..."></div>
+        <div class="form-group full"><label>הערות ועדה</label><input id="f_committeeNotes" placeholder="הערות מהועדה"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="saveProject()">שמור</button>
+        <button class="btn" onclick="closeModal()">ביטול</button>
+        <button class="btn btn-danger" id="deleteBtn" onclick="deleteProject()" style="margin-right:auto;display:none">מחק פרויקט</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+const SEED_DATA = [
+  {name:"כינאן עוידאת",stage:"בבקשה למידע",priority:"דחוף מאוד",status:"בטיפול משרדי",worker:"Kinan Awidat",startDate:"2025-06-03",reqNum:"",payment:"מקדמה",process:"הוגש להגא",notes:"להוסיף פליטת גג לחזיתות",committeeNotes:"אין הערות",link:"",filepath:"",lastUpdate:"2026-05-17"},
+  {name:"אדם הוניגמן",stage:"בבקשה להיתר",priority:"חשוב",status:"בטיפול גורם מאשר",worker:"Kinan Awidat",startDate:"2025-06-01",reqNum:"10000496074",payment:"מקדמה",process:"אישור מועצה מטולה",notes:"הערות מועצה תוקנו, צריך להחזיר",committeeNotes:"יש לתקן הערות",link:"",filepath:"W:\\aaw-2017\\AA\\adam-honigman",lastUpdate:"2026-01-27"},
+  {name:"מרסיל עוידאת",stage:"בבקשה להיתר",priority:"דחוף מאוד",status:"בטיפול רישוי זמין",worker:"Kinan Awidat",startDate:"2025-06-01",reqNum:"10000496163",payment:"לא התקבל תשלום",process:"חסר חקלאות",notes:"הערות",committeeNotes:"אין הערות",link:"https://rishuybniya.moin.gov.il/PersonalZone/Pages/TabPaymentandSignature.aspx?PortfolioId=10000496163",filepath:"W:\\aaw-2017\\MM\\marsel-awidat-haklaee",lastUpdate:"2026-05-08"},
+  {name:"מחסן מל\"ח מסעדה",stage:"בבקרה מרחבית",priority:"דחוף מאוד",status:"בטיפול רישוי זמין",worker:"Maan Awidat",startDate:"2025-06-01",reqNum:"10000495441",payment:"לא התקבל תשלום",process:"נשלח לדוח קרקע + הגא",notes:"צריך מכון בקרה",committeeNotes:"אין הערות",link:"",filepath:"W:\\aaw-2017\\MM\\massade\\מחסן מלח-2025",lastUpdate:"2026-02-12"},
+  {name:"פאדי ספדי",stage:"בתכן",priority:"דחוף מאוד",status:"בטיפול משרדי",worker:"",startDate:"2025-01-01",reqNum:"10000422563",payment:"לא התקבל תשלום",process:"תנור",notes:"אושר מהגא",committeeNotes:"אין הערות",link:"https://rishuybniya.moin.gov.il/PersonalZone/Pages/TabPaymentAndSignature.aspx?PortfolioId=10000422563",filepath:"W:\\aaw-2017\\FF\\fadi-sfadi",lastUpdate:"2026-02-09"},
+  {name:"איציק גרשוני",stage:"בתכן",priority:"דחוף",status:"בטיפול משרדי",worker:"salam ayoub",startDate:"",reqNum:"10000388901",payment:"",process:"אישורי בקרת תכן ממתין לרמ\"י",notes:"מוכן ביוב פנימי ותברואה",committeeNotes:"אין הערות",link:"https://rishuybniya.moin.gov.il/PersonalZone/Pages/TabPaymentAndSignature.aspx?PortfolioId=10000388901",filepath:"W:\\aaw-2017\\II\\izik-garshony",lastUpdate:"2026-04-14"},
+  {name:"חרב שעלאן",stage:"בבקשה להיתר",priority:"חשוב",status:"בטיפול גורם מאשר",worker:"",startDate:"",reqNum:"",payment:"",process:"נשלח לרמ\"י",notes:"הערות",committeeNotes:"אין הערות",link:"",filepath:"",lastUpdate:"2025-07-24"},
+  {name:"אהרון - קריית שמונה",stage:"",priority:"דחוף מאוד",status:"בטיפול משרדי",worker:"salam ayoub",startDate:"2025-08-24",reqNum:"",payment:"",process:"אושר חדש מהגא",notes:"צריך תכניות עבודה",committeeNotes:"אין הערות",link:"",filepath:"",lastUpdate:"2025-12-17"},
+  {name:"ראוף",stage:"בבקרה מרחבית",priority:"דחוף",status:"בטיפול רישוי זמין",worker:"salam ayoub",startDate:"2025-07-13",reqNum:"10000583178",payment:"",process:"נשלח לועדה",notes:"הערות",committeeNotes:"אין הערות",link:"http://rishuybniya.moin.gov.il/PersonalZone/Pages/TabPaymentAndSignature.aspx?PortfolioId=10000583178",filepath:"W:\\aaw-2017\\RR\\raoof\\",lastUpdate:"2026-04-29"},
+  {name:"ריאד ורביע עוידאת",stage:"בבקרה מרחבית",priority:"דחוף מאוד",status:"בטיפול גורם מאשר",worker:"Kinan Awidat",startDate:"2025-12-15",reqNum:"10000566187",payment:"",process:"תהליך",notes:"הערות",committeeNotes:"אין הערות",link:"https://rishuybniya.moin.gov.il/PersonalZone/Pages/TabOtherDocuments.aspx?portfolioId=10000566187",filepath:"W:\\aaw-2017\\RR\\Riad + Rabea awidat",lastUpdate:"2026-05-19"},
+  {name:"דני קירש - בני יהודה",stage:"",priority:"דחוף מאוד",status:"בטיפול גורם מאשר",worker:"Kinan Awidat",startDate:"2025-12-24",reqNum:"",payment:"",process:"הוגש להגא לפטור ממ\"ד",notes:"צריך request ולהוסיף לגליונות",committeeNotes:"",link:"https://rishuybniya.moin.gov.il/PersonalZone/Pages/TabOtherDocuments.aspx?PortfolioId=10000583016",filepath:"W:\\aaw-2017\\DD\\dani",lastUpdate:"2026-04-26"},
+  {name:"מועדון נוער- בקעאתא",stage:"",priority:"דחוף מאוד",status:"בטיפול משרדי",worker:"salam ayoub",startDate:"2026-03-29",reqNum:"",payment:"",process:"צריך request ולהגיש לועדה",notes:"נשאר קונס",committeeNotes:"",link:"",filepath:"",lastUpdate:"2026-04-28"},
+  {name:"שמעון- קריית שמונה",stage:"",priority:"דחוף מאוד",status:"בטיפול משרדי",worker:"salam ayoub",startDate:"2026-05-06",reqNum:"",payment:"",process:"צריך request ולהגיש לועדה",notes:"נשאר ביוב",committeeNotes:"",link:"",filepath:"",lastUpdate:"2026-05-19"}
+];
+
+const PRIORITY_COLORS = {"דחוף מאוד":"badge-red","דחוף":"badge-amber","חשוב":"badge-blue","רגיל":"badge-gray"};
+const PRIORITY_DOT = {"דחוף מאוד":"#E24B4A","דחוף":"#EF9F27","חשוב":"#378ADD","רגיל":"#888780"};
+
+let projects = [], currentTab = 'הכל', editingId = null, db = null;
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAmUKsBA9iRNdl7Vz_h4AWqZOhvvmNP4fA",
+  authDomain: "maanarch-5d5ee.firebaseapp.com",
+  projectId: "maanarch-5d5ee",
+  storageBucket: "maanarch-5d5ee.firebasestorage.app",
+  messagingSenderId: "553922854517",
+  appId: "1:553922854517:web:38e7c89a63d82caecd823c"
+};
+
+function initFirebase() {
+  try {
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    startListener();
+  } catch(e) { setConnStatus('err'); loadLocalData(); }
+}
+
+function setConnStatus(s) {
+  const el = document.getElementById('connStatus');
+  const dot = document.getElementById('syncDot');
+  const txt = document.getElementById('syncText');
+  if(s==='ok') { el.className='conn-status conn-ok'; el.textContent='מחובר ל-Firebase'; dot.style.background='#3B6D11'; txt.textContent='סנכרון פעיל'; }
+  else if(s==='err') { el.className='conn-status conn-err'; el.textContent='שגיאת חיבור'; dot.style.background='#A32D2D'; txt.textContent='נטען מקומית'; }
+  else { el.className='conn-status conn-pending'; el.textContent='מתחבר...'; dot.style.background='#BA7517'; txt.textContent='ממתין...'; }
+}
+
+function loadLocalData() {
+  projects = SEED_DATA.map((p,i)=>({...p,id:'seed_'+i}));
+  renderTable(); updateCounts();
+  document.getElementById('lastSync').textContent = 'נטענו נתוני דוגמה';
+}
+
+function startListener() {
+  db.collection('projects').orderBy('lastUpdate','desc').onSnapshot(snap => {
+    if(snap.empty) { seedFirestore(); return; }
+    projects = snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderTable(); updateCounts(); setConnStatus('ok');
+    document.getElementById('lastSync').textContent = 'עדכון: ' + new Date().toLocaleTimeString('he-IL');
+  }, () => { setConnStatus('err'); loadLocalData(); });
+}
+
+function seedFirestore() {
+  const batch = db.batch();
+  SEED_DATA.forEach(p => { const ref = db.collection('projects').doc(); batch.set(ref,p); });
+  batch.commit().catch(()=>{ setConnStatus('err'); loadLocalData(); });
+}
+
+function getFiltered() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const fp = document.getElementById('filterPriority').value;
+  const fw = document.getElementById('filterWorker').value;
+  const fs = document.getElementById('filterStage').value;
+  return projects.filter(p => {
+    if(q && !(p.name||'').toLowerCase().includes(q)) return false;
+    if(fp && p.priority!==fp) return false;
+    if(fw && p.worker!==fw) return false;
+    if(fs && p.stage!==fs) return false;
+    if(currentTab!=='הכל' && p.status!==currentTab) return false;
+    return true;
+  });
+}
+
+function updateCounts() {
+  ['הכל','בטיפול משרדי','בטיפול גורם מאשר','בטיפול רישוי זמין'].forEach(s => {
+    const el = document.getElementById('cnt-'+s);
+    if(el) el.textContent = s==='הכל' ? projects.length : projects.filter(p=>p.status===s).length;
+  });
+  const workers = [...new Set(projects.map(p=>p.worker).filter(Boolean))];
+  const fw = document.getElementById('filterWorker');
+  const cur = fw.value;
+  fw.innerHTML = '<option value="">כל הצוות</option>' + workers.map(w=>`<option${w===cur?' selected':''}>${w}</option>`).join('');
+}
+
+function renderTable() {
+  const filtered = getFiltered();
+  const tbody = document.getElementById('tableBody');
+  const empty = document.getElementById('emptyState');
+  document.getElementById('countLabel').textContent = filtered.length + ' פרויקטים';
+  if(!filtered.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  tbody.innerHTML = filtered.map(p => {
+    const badge = PRIORITY_COLORS[p.priority]||'badge-gray';
+    const dot = PRIORITY_DOT[p.priority]||'#888';
+    const upd = (p.lastUpdate||'').toString().slice(0,10);
+    const shortName = (p.worker||'').split(' ')[0]||'—';
+    const linkCell = p.link
+      ? `<a href="${p.link}" target="_blank" onclick="event.stopPropagation()">🔗</a>`
+      : (p.filepath ? `<span title="${p.filepath}">📁</span>` : '—');
+    return `<tr ondblclick="openEdit('${p.id}')">
+      <td><span class="priority-dot" style="background:${dot}"></span><strong style="font-weight:500">${p.name}</strong>${p.process?`<br><span style="font-size:11px;color:#888">${p.process}</span>`:''}</td>
+      <td style="font-size:12px">${p.stage||'—'}</td>
+      <td><span class="badge ${badge}">${p.priority||'—'}</span></td>
+      <td style="font-size:12px;color:#888">${p.status||'—'}</td>
+      <td style="font-size:12px">${shortName}</td>
+      <td style="font-size:11px;color:#888">${upd}</td>
+      <td style="font-size:11px">${p.reqNum||'—'}</td>
+      <td style="font-size:11px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${p.notes||''}">${p.notes||'—'}</td>
+      <td style="text-align:center">${linkCell}</td>
+      <td><button class="btn" style="padding:3px 8px;font-size:11px" onclick="event.stopPropagation();openEdit('${p.id}')">עריכה</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function setTab(t) {
+  currentTab = t;
+  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  renderTable();
+}
+
+function openAdd() {
+  editingId = null;
+  document.getElementById('modalTitle').textContent = 'פרויקט חדש';
+  document.getElementById('deleteBtn').style.display = 'none';
+  ['f_name','f_stage','f_worker','f_startDate','f_reqNum','f_payment','f_process','f_notes','f_link','f_filepath','f_committeeNotes'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('f_priority').value = 'חשוב';
+  document.getElementById('f_status').value = 'בטיפול משרדי';
+  document.getElementById('modalWrap').style.display = 'block';
+}
+
+function openEdit(id) {
+  const p = projects.find(x=>x.id===id); if(!p) return;
+  editingId = id;
+  document.getElementById('modalTitle').textContent = 'עריכת פרויקט';
+  document.getElementById('deleteBtn').style.display = 'block';
+  document.getElementById('f_name').value = p.name||'';
+  document.getElementById('f_stage').value = p.stage||'';
+  document.getElementById('f_priority').value = p.priority||'חשוב';
+  document.getElementById('f_status').value = p.status||'בטיפול משרדי';
+  document.getElementById('f_worker').value = p.worker||'';
+  document.getElementById('f_startDate').value = p.startDate||'';
+  document.getElementById('f_reqNum').value = p.reqNum||'';
+  document.getElementById('f_payment').value = p.payment||'';
+  document.getElementById('f_process').value = p.process||'';
+  document.getElementById('f_notes').value = p.notes||'';
+  document.getElementById('f_link').value = p.link||'';
+  document.getElementById('f_filepath').value = p.filepath||'';
+  document.getElementById('f_committeeNotes').value = p.committeeNotes||'';
+  document.getElementById('modalWrap').style.display = 'block';
+}
+
+function closeModal() { document.getElementById('modalWrap').style.display='none'; }
+
+function saveProject() {
+  const name = document.getElementById('f_name').value.trim();
+  if(!name) { alert('יש להכניס שם עבודה'); return; }
+  const data = {
+    name, stage: document.getElementById('f_stage').value,
+    priority: document.getElementById('f_priority').value,
+    status: document.getElementById('f_status').value,
+    worker: document.getElementById('f_worker').value.trim(),
+    startDate: document.getElementById('f_startDate').value,
+    reqNum: document.getElementById('f_reqNum').value.trim(),
+    payment: document.getElementById('f_payment').value,
+    process: document.getElementById('f_process').value.trim(),
+    notes: document.getElementById('f_notes').value.trim(),
+    link: document.getElementById('f_link').value.trim(),
+    filepath: document.getElementById('f_filepath').value.trim(),
+    committeeNotes: document.getElementById('f_committeeNotes').value.trim(),
+    lastUpdate: new Date().toISOString().split('T')[0]
+  };
+  if(db) {
+    if(editingId) db.collection('projects').doc(editingId).update(data);
+    else db.collection('projects').add(data);
+  } else {
+    if(editingId) { const i=projects.findIndex(p=>p.id===editingId); if(i>=0) projects[i]={...projects[i],...data}; }
+    else projects.unshift({id:'local_'+Date.now(),...data});
+    renderTable(); updateCounts();
+  }
+  closeModal();
+}
+
+function deleteProject() {
+  if(!editingId || !confirm('למחוק פרויקט זה?')) return;
+  if(db) db.collection('projects').doc(editingId).delete();
+  else { projects=projects.filter(p=>p.id!==editingId); renderTable(); updateCounts(); }
+  closeModal();
+}
+
+initFirebase();
+</script>
+</body>
+</html>
