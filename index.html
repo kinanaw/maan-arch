@@ -346,6 +346,15 @@ a:hover { text-decoration: underline; }
       <label>סה"כ שכר טרחה (₪)</label>
       <input type="number" id="pay_total" placeholder="למשל: 50000">
     </div>
+    <div class="form-group" style="margin-bottom:12px;">
+      <label>סטטוס תשלום</label>
+      <select id="pay_status" style="width:100%; border:1.5px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; font-family:inherit;">
+        <option value="טרם עודכן">טרם עודכן</option>
+        <option value="מקדמה">מקדמה</option>
+        <option value="חוב">חוב</option>
+        <option value="שולם">שולם במלואו</option>
+      </select>
+    </div>
     <div style="margin-bottom:15px;">
         <label>פירוט תשלומים:</label>
         <div style="overflow-x: auto; margin-top:10px;">
@@ -697,6 +706,7 @@ function openPaymentEdit(id) {
   currentPayEditId = id;
   document.getElementById('payEditTitle').textContent = `ניהול תשלומים: ${p.name}`;
   document.getElementById('pay_total').value = p.payTotal || '';
+  document.getElementById('pay_status').value = p.payStatus || 'טרם עודכן';
   
   // טעינת רשימת התשלומים הדינמית
   const payments = p.payments || [];
@@ -746,6 +756,7 @@ function savePaymentDetails() {
   const p = projects.find(x=>x.id===currentPayEditId);
   const data = {
     payTotal: document.getElementById('pay_total').value,
+    payStatus: document.getElementById('pay_status').value,
     payments: p.payments || [],
     lastUpdate: new Date().toISOString().split('T')[0]
   };
