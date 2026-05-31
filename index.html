@@ -4,84 +4,140 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>מען — ניהול פרויקטים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', Arial, sans-serif; direction: rtl; background: #f5f4f0; color: #1a1a1a; }
+body { font-family: 'Heebo', sans-serif; direction: rtl; background: #f4f6f8; color: #202124; -webkit-font-smoothing: antialiased; }
 :root {
-  --blue: #185FA5; --blue-light: #E6F1FB;
-  --amber: #BA7517; --amber-light: #FAEEDA;
-  --red: #A32D2D; --red-light: #FCEBEB;
-  --green: #3B6D11; --green-light: #EAF3DE;
-  --gray-light: #F1EFE8;
-  --border: rgba(0,0,0,0.12);
-  --bg: #ffffff; --bg2: #f5f4f0;
-  --text: #1a1a1a; --text2: #666;
-  --radius: 8px; --radius-lg: 12px;
+  --blue: #1a73e8; --blue-light: #e8f0fe; --blue-hover: #1557b0;
+  --amber: #f29900; --amber-light: #fef0d9;
+  --red: #d93025; --red-light: #fce8e6;
+  --green: #1e8e3e; --green-light: #e6f4ea;
+  --gray-light: #f1f3f4;
+  --border: #dadce0;
+  --bg: #ffffff; --bg-app: #f4f6f8;
+  --text: #202124; --text2: #5f6368; --text-muted: #80868b;
+  --radius: 8px; --radius-lg: 16px;
+  --shadow-sm: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
 }
 
 /* LOGIN */
-.login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #f5f4f0; }
-.login-card { background: #fff; border-radius: var(--radius-lg); border: 0.5px solid var(--border); padding: 2.5rem 2rem; width: 100%; max-width: 360px; text-align: center; }
-.login-card h1 { font-size: 22px; font-weight: 600; margin-bottom: 0.25rem; }
-.login-card p { font-size: 13px; color: var(--text2); margin-bottom: 1.75rem; }
-.login-card input { width: 100%; border: 0.5px solid var(--border); border-radius: var(--radius); padding: 9px 12px; font-size: 14px; margin-bottom: 10px; font-family: inherit; direction: rtl; background: var(--bg); color: var(--text); }
-.login-card input:focus { outline: none; border-color: var(--blue); }
-.login-card button { width: 100%; background: var(--blue); color: #fff; border: none; border-radius: var(--radius); padding: 10px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit; margin-top: 4px; }
-.login-card button:hover { background: #0C447C; }
-.login-error { color: var(--red); font-size: 12px; margin-top: 8px; min-height: 18px; }
+.login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg-app); }
+.login-card { background: #fff; border-radius: var(--radius-lg); padding: 3rem 2.5rem; width: 100%; max-width: 400px; text-align: center; box-shadow: var(--shadow-md); }
+.login-card h1 { font-size: 28px; font-weight: 700; color: var(--blue); margin-bottom: 0.5rem; letter-spacing: -0.5px; }
+.login-card p { font-size: 15px; color: var(--text2); margin-bottom: 2rem; }
+.login-card input { width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 12px 16px; font-size: 15px; margin-bottom: 16px; font-family: inherit; transition: all 0.2s; }
+.login-card input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-light); }
+.login-card button { width: 100%; background: var(--blue); color: #fff; border: none; border-radius: var(--radius); padding: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.login-card button:hover { background: var(--blue-hover); transform: translateY(-1px); }
+.login-error { color: var(--red); font-size: 13px; margin-top: 12px; min-height: 18px; font-weight: 500; }
 
 /* APP */
-.app { max-width: 1300px; margin: 0 auto; padding: 1.5rem; }
-.topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 8px; background: var(--bg); border-radius: var(--radius-lg); padding: 1rem 1.25rem; border: 0.5px solid var(--border); }
-.topbar h1 { font-size: 20px; font-weight: 600; }
-.topbar-right { display: flex; gap: 8px; align-items: center; }
-.btn { background: transparent; border: 0.5px solid var(--border); border-radius: var(--radius); padding: 6px 14px; font-size: 13px; cursor: pointer; color: var(--text); font-family: inherit; direction: rtl; }
-.btn:hover { background: var(--bg2); }
-.btn-primary { background: var(--blue); color: #fff; border-color: var(--blue); }
-.btn-primary:hover { background: #0C447C; }
-.btn-danger { color: var(--red); border-color: var(--red); }
-.btn-danger:hover { background: var(--red-light); }
-.filter-bar { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; background: var(--bg); border-radius: var(--radius); padding: 0.75rem 1rem; border: 0.5px solid var(--border); }
-.filter-bar select, .filter-bar input { border: 0.5px solid var(--border); border-radius: var(--radius); padding: 5px 10px; font-size: 13px; background: var(--bg); color: var(--text); font-family: inherit; direction: rtl; }
-.filter-bar input { flex: 1; min-width: 140px; }
-.status-tabs { display: flex; gap: 4px; margin-bottom: 1rem; flex-wrap: wrap; }
-.tab { padding: 5px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 0.5px solid var(--border); background: var(--bg); color: var(--text2); font-family: inherit; }
-.tab.active { background: var(--blue); color: #fff; border-color: var(--blue); }
-.table-wrap { background: var(--bg); border-radius: var(--radius-lg); border: 0.5px solid var(--border); overflow-x: auto; }
-.projects-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.projects-table th { text-align: right; padding: 10px 12px; font-weight: 500; color: var(--text2); border-bottom: 0.5px solid var(--border); font-size: 12px; white-space: nowrap; background: var(--bg2); }
-.projects-table td { padding: 10px 12px; border-bottom: 0.5px solid var(--border); vertical-align: middle; }
+.app { max-width: 1360px; margin: 0 auto; padding: 2rem; }
+.topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 16px; }
+.topbar h1 { font-size: 24px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
+.topbar-right { display: flex; gap: 12px; align-items: center; }
+
+/* QUICK COPY BAR */
+.quick-copy-bar { background: var(--bg); padding: 0.75rem 1rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.quick-copy-bar strong { font-size: 13px; color: var(--text2); }
+.quick-copy-btn { background: var(--gray-light); border: 1.5px dashed var(--border); border-radius: 6px; padding: 6px 12px; font-size: 13px; font-family: monospace; cursor: pointer; color: var(--text); transition: all 0.2s; direction: ltr; }
+.quick-copy-btn:hover { background: var(--blue-light); border-color: var(--blue); color: var(--blue); transform: translateY(-1px); }
+
+/* STATS CARDS */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.stat-card { background: var(--bg); padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; border-top: 4px solid transparent; transition: transform 0.2s;}
+.stat-card:hover { transform: translateY(-2px); }
+.stat-card.total { border-color: var(--blue); }
+.stat-card.urgent { border-color: var(--red); }
+.stat-card.office { border-color: var(--amber); }
+.stat-card.done { border-color: var(--green); }
+.stat-title { font-size: 13px; color: var(--text2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+.stat-value { font-size: 32px; font-weight: 700; color: var(--text); line-height: 1; }
+
+/* CONTROLS */
+.controls-wrapper { background: var(--bg); padding: 1rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); margin-bottom: 1.5rem; }
+.filter-bar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.filter-bar input, .filter-bar select { border: 1.5px solid var(--border); border-radius: var(--radius); padding: 8px 14px; font-size: 14px; background: var(--bg); color: var(--text); font-family: inherit; transition: border-color 0.2s; }
+.filter-bar input { flex: 1; min-width: 200px; }
+.filter-bar input:focus, .filter-bar select:focus { outline: none; border-color: var(--blue); }
+
+.status-tabs { display: flex; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1rem; }
+.tab { padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; background: transparent; color: var(--text2); font-family: inherit; transition: all 0.2s; }
+.tab:hover { background: var(--gray-light); color: var(--text); }
+.tab.active { background: var(--blue-light); color: var(--blue); font-weight: 600; }
+
+/* TABLE */
+.table-wrap { background: var(--bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden; }
+.projects-table { width: 100%; border-collapse: collapse; text-align: right; }
+.projects-table th { padding: 14px 16px; font-weight: 600; color: var(--text2); font-size: 13px; background: #fafafa; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.projects-table td { padding: 16px; border-bottom: 1px solid var(--border); vertical-align: middle; font-size: 14px; }
+.projects-table tr { background: var(--bg); transition: background 0.15s; }
 .projects-table tr:last-child td { border-bottom: none; }
-.projects-table tr:hover td { background: var(--bg2); cursor: pointer; }
-.badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 500; white-space: nowrap; }
-.badge-red { background: var(--red-light); color: var(--red); }
-.badge-amber { background: var(--amber-light); color: var(--amber); }
-.badge-blue { background: var(--blue-light); color: var(--blue); }
-.badge-green { background: var(--green-light); color: var(--green); }
-.badge-gray { background: var(--gray-light); color: #5F5E5A; }
-.priority-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 6px; }
-.sync-indicator { font-size: 11px; color: var(--text2); display: flex; align-items: center; gap: 4px; }
-.sync-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-.conn-status { font-size: 11px; padding: 3px 8px; border-radius: 20px; }
-.conn-ok { background: var(--green-light); color: var(--green); }
-.conn-err { background: var(--red-light); color: var(--red); }
-.conn-pending { background: var(--amber-light); color: var(--amber); }
-.empty-state { text-align: center; padding: 3rem; color: var(--text2); font-size: 14px; }
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: flex-start; justify-content: center; padding-top: 60px; z-index: 100; }
-.modal { background: var(--bg); border-radius: var(--radius-lg); border: 0.5px solid var(--border); padding: 1.5rem; width: 100%; max-width: 580px; max-height: 85vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
-.modal h2 { font-size: 16px; font-weight: 600; margin-bottom: 1.25rem; }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.form-group { display: flex; flex-direction: column; gap: 4px; }
+.projects-table tr:hover { background: #f8f9fa; cursor: pointer; }
+
+/* PAYMENTS TABLE */
+.payments-table { width: 100%; border-collapse: collapse; text-align: right; }
+.payments-table th, .payments-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 14px; vertical-align: middle; }
+.payments-table th { background: #fafafa; font-weight: 600; color: var(--text2); position: sticky; top: 0; z-index: 10; box-shadow: 0 1px 0 var(--border); }
+.payments-table tr:hover { background: #f8f9fa; }
+
+/* URGENCY & ALIVENESS */
+.row-urgent { border-right: 4px solid var(--red); background: #fffaf9; }
+.row-urgent:hover { background: #fff1f0; }
+
+.badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; white-space: nowrap; letter-spacing: 0.3px; }
+.badge-red { background: var(--red-light); color: var(--red); border: 1px solid rgba(217,48,37,0.2); }
+.badge-amber { background: var(--amber-light); color: #b06000; border: 1px solid rgba(242,153,0,0.2); }
+.badge-blue { background: var(--blue-light); color: var(--blue); border: 1px solid rgba(26,115,232,0.2); }
+.badge-gray { background: var(--gray-light); color: var(--text2); border: 1px solid var(--border); }
+
+/* AVATAR */
+.worker-cell { display: flex; align-items: center; gap: 10px; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--blue-light); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; text-transform: uppercase; flex-shrink: 0; }
+.avatar-red { background: var(--red-light); color: var(--red); }
+.avatar-amber { background: var(--amber-light); color: #b06000; }
+.avatar-green { background: var(--green-light); color: var(--green); }
+
+/* BUTTONS & MISC */
+.btn { background: transparent; border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 16px; font-size: 14px; font-weight: 500; cursor: pointer; color: var(--text); font-family: inherit; transition: all 0.2s; }
+.btn:hover { background: var(--gray-light); }
+.btn-primary { background: var(--blue); color: #fff; border-color: var(--blue); box-shadow: 0 2px 4px rgba(26,115,232,0.3); }
+.btn-primary:hover { background: var(--blue-hover); transform: translateY(-1px); box-shadow: 0 4px 6px rgba(26,115,232,0.4); }
+.btn-danger { color: var(--red); border-color: rgba(217,48,37,0.5); }
+.btn-danger:hover { background: var(--red-light); border-color: var(--red); }
+.btn-gold { color: #b06000; border-color: #b06000; background: var(--amber-light); }
+.btn-gold:hover { background: #fce1b6; }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+
+.sync-indicator { font-size: 13px; font-weight: 500; color: var(--text2); display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: #fff; border-radius: 20px; box-shadow: var(--shadow-sm); }
+.sync-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; background: var(--green); animation: pulse 2s infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(30,142,62,0.4); } 70% { box-shadow: 0 0 0 6px rgba(30,142,62,0); } 100% { box-shadow: 0 0 0 0 rgba(30,142,62,0); } }
+
+.empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-muted); font-size: 16px; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.empty-state svg { width: 64px; height: 64px; fill: var(--border); }
+
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(32,33,36,0.6); backdrop-filter: blur(2px); display: flex; align-items: flex-start; justify-content: center; padding-top: 40px; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal { background: var(--bg); border-radius: var(--radius-lg); padding: 2rem; width: 100%; max-width: 640px; max-height: 85vh; overflow-y: auto; box-shadow: 0 24px 38px 3px rgba(0,0,0,0.14); transform: translateY(-20px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal h2 { font-size: 20px; font-weight: 700; margin-bottom: 1.5rem; color: var(--text); border-bottom: 2px solid var(--blue-light); padding-bottom: 0.5rem; display: inline-block;}
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
 .form-group.full { grid-column: 1/-1; }
-.form-group label { font-size: 12px; color: var(--text2); font-weight: 500; }
-.form-group input, .form-group select, .form-group textarea { border: 0.5px solid var(--border); border-radius: var(--radius); padding: 7px 10px; font-size: 13px; background: var(--bg); color: var(--text); font-family: inherit; direction: rtl; }
+.form-group label { font-size: 13px; color: var(--text2); font-weight: 600; }
+.form-group input, .form-group select, .form-group textarea { border: 1.5px solid var(--border); border-radius: var(--radius); padding: 10px 12px; font-size: 14px; transition: border-color 0.2s; font-family: inherit;}
 .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--blue); }
-.form-group textarea { resize: vertical; min-height: 64px; }
-.modal-actions { display: flex; gap: 8px; justify-content: flex-start; margin-top: 1.25rem; padding-top: 1rem; border-top: 0.5px solid var(--border); }
-.footer { margin-top: 0.75rem; font-size: 12px; color: var(--text2); display: flex; justify-content: space-between; padding: 0 0.25rem; }
-a { color: var(--blue); text-decoration: none; }
+.form-group textarea { resize: vertical; min-height: 80px; }
+.modal-actions { display: flex; gap: 12px; justify-content: flex-start; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+
+a { color: var(--blue); text-decoration: none; font-weight: 500; }
 a:hover { text-decoration: underline; }
+.footer { margin-top: 1.5rem; font-size: 13px; color: var(--text-muted); display: flex; justify-content: space-between; }
 </style>
 </head>
 <body>
@@ -89,11 +145,12 @@ a:hover { text-decoration: underline; }
 <!-- מסך כניסה -->
 <div id="loginScreen" class="login-screen">
   <div class="login-card">
+    <img src="maanarch_logo_Desktop.png" alt="לוגו מען אדריכלים" style="max-width: 160px; margin-bottom: 1.5rem;" onerror="this.style.display='none'">
     <h1>מען אדריכלים</h1>
-    <p>ניהול פרויקטים — כניסה למשרד</p>
-    <input type="email" id="loginEmail" placeholder="אימייל" autocomplete="username">
+    <p>ניהול פרויקטים ומעקב משימות</p>
+    <input type="email" id="loginEmail" placeholder="כתובת אימייל" autocomplete="username">
     <input type="password" id="loginPassword" placeholder="סיסמה" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
-    <button onclick="doLogin()">כניסה</button>
+    <button onclick="doLogin()">כניסה למערכת</button>
     <div class="login-error" id="loginError"></div>
   </div>
 </div>
@@ -102,54 +159,94 @@ a:hover { text-decoration: underline; }
 <div id="mainApp" style="display:none">
   <div class="app">
     <div class="topbar">
-      <div style="display:flex;align-items:center;gap:12px">
-        <h1>מען — ניהול פרויקטים</h1>
-        <span class="conn-status conn-ok" id="connStatus">מחובר</span>
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <img src="maanarch_logo_Desktop.png" alt="לוגו מען" style="max-height: 55px; object-fit: contain;" onerror="this.style.display='none'">
+        <div>
+          <h1>מערכת ניהול פרויקטים</h1>
+          <div style="font-size:13px; color:var(--text2); margin-top:4px;">מחובר כ: <span id="userEmail" style="font-weight:600"></span></div>
+        </div>
       </div>
       <div class="topbar-right">
         <span class="sync-indicator">
-          <span class="sync-dot" id="syncDot" style="background:#3B6D11"></span>
-          <span id="syncText">סנכרון פעיל</span>
+          <span class="sync-dot"></span> מערכת מסונכרנת
         </span>
-        <span id="userEmail" style="font-size:12px;color:var(--text2)"></span>
+        <button class="btn btn-gold" onclick="openPaymentsAuth()">💰 ניהול תשלומים</button>
         <button class="btn" onclick="doLogout()">יציאה</button>
         <button class="btn btn-primary" onclick="openAdd()">+ פרויקט חדש</button>
       </div>
     </div>
 
-    <div class="filter-bar">
-      <input type="text" id="searchInput" placeholder="חיפוש לפי שם..." oninput="renderTable()">
-      <select id="filterPriority" onchange="renderTable()">
-        <option value="">כל העדיפויות</option>
-        <option>דחוף מאוד</option><option>דחוף</option><option>חשוב</option><option>רגיל</option>
-      </select>
-      <select id="filterWorker" onchange="renderTable()"><option value="">כל הצוות</option></select>
-      <select id="filterStage" onchange="renderTable()">
-        <option value="">כל השלבים</option>
-        <option>בבקשה למידע</option><option>בבקשה להיתר</option>
-        <option>בבקרה מרחבית</option><option>בתכן</option><option>תב"ע</option>
-      </select>
+    <!-- Quick Copy Bar -->
+    <div class="quick-copy-bar">
+      <strong>העתקות נפוצות:</strong>
+      <button class="quick-copy-btn" onclick="copyPath(this.innerText)">W:\aaw-2017\</button>
+      <button class="quick-copy-btn" onclick="copyPath(this.innerText)">W:\abw-2017\</button>
+      <button class="quick-copy-btn" onclick="copyPath(this.innerText)">TabPaymentAndSignature</button>
     </div>
 
-    <div class="status-tabs">
-      <button class="tab active" onclick="setTab('הכל')" id="tab-הכל">הכל (<span id="cnt-הכל">0</span>)</button>
-      <button class="tab" onclick="setTab('בטיפול משרדי')" id="tab-בטיפול משרדי">בטיפול משרדי (<span id="cnt-בטיפול משרדי">0</span>)</button>
-      <button class="tab" onclick="setTab('בטיפול גורם מאשר')" id="tab-בטיפול גורם מאשר">גורם מאשר (<span id="cnt-בטיפול גורם מאשר">0</span>)</button>
-      <button class="tab" onclick="setTab('בטיפול רישוי זמין')" id="tab-בטיפול רישוי זמין">רישוי זמין (<span id="cnt-בטיפול רישוי זמין">0</span>)</button>
+    <!-- Stats Dashboard -->
+    <div class="stats-grid">
+      <div class="stat-card total">
+        <div class="stat-title">סה״כ פרויקטים</div>
+        <div class="stat-value" id="statTotal">0</div>
+      </div>
+      <div class="stat-card urgent">
+        <div class="stat-title">דחוף / דחוף מאוד</div>
+        <div class="stat-value" id="statUrgent" style="color:var(--red)">0</div>
+      </div>
+      <div class="stat-card office">
+        <div class="stat-title">בטיפול משרדי</div>
+        <div class="stat-value" id="statOffice">0</div>
+      </div>
+      <div class="stat-card done">
+        <div class="stat-title">רישוי זמין</div>
+        <div class="stat-value" id="statRishuy">0</div>
+      </div>
+    </div>
+
+    <div class="controls-wrapper">
+      <div class="status-tabs">
+        <button class="tab active" onclick="setTab('הכל')" id="tab-הכל">הכל (<span id="cnt-הכל">0</span>)</button>
+        <button class="tab" onclick="setTab('בטיפול משרדי')" id="tab-בטיפול משרדי">בטיפול משרדי (<span id="cnt-בטיפול משרדי">0</span>)</button>
+        <button class="tab" onclick="setTab('בטיפול גורם מאשר')" id="tab-בטיפול גורם מאשר">גורם מאשר (<span id="cnt-בטיפול גורם מאשר">0</span>)</button>
+        <button class="tab" onclick="setTab('בטיפול רישוי זמין')" id="tab-בטיפול רישוי זמין">רישוי זמין (<span id="cnt-בטיפול רישוי זמין">0</span>)</button>
+      </div>
+
+      <div class="filter-bar">
+        <input type="text" id="searchInput" placeholder="חיפוש פרויקט או מספר בקשה..." oninput="renderTable()">
+        <select id="filterPriority" onchange="renderTable()">
+          <option value="">כל העדיפויות</option>
+          <option>דחוף מאוד</option><option>דחוף</option><option>חשוב</option><option>רגיל</option>
+        </select>
+        <select id="filterWorker" onchange="renderTable()"><option value="">כל הצוות</option></select>
+        <select id="filterStage" onchange="renderTable()">
+          <option value="">כל השלבים בועדה</option>
+          <option>בבקשה למידע</option><option>בבקשה להיתר</option>
+          <option>בבקרה מרחבית</option><option>בתכן</option><option>תב"ע</option>
+        </select>
+      </div>
     </div>
 
     <div class="table-wrap">
       <table class="projects-table">
         <thead>
           <tr>
-            <th>שם עבודה</th><th>שלב ועדה</th><th>עדיפות</th>
-            <th>איפה עומד</th><th>מי מטפל</th><th>עדכון אחרון</th>
-            <th>מ. בקשה</th><th>הערות</th><th>לינק</th><th></th>
+            <th style="width: 25%">שם העבודה / תהליך</th>
+            <th>עדיפות</th>
+            <th>סטטוס ושלב</th>
+            <th>אחראי</th>
+            <th>עדכון אחרון</th>
+            <th style="width: 20%">הערות אחרונות</th>
+            <th>קישורים</th>
+            <th></th>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
       </table>
-      <div id="emptyState" class="empty-state" style="display:none">אין פרויקטים תואמים</div>
+      <div id="emptyState" class="empty-state" style="display:none">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/><path d="M7 12h2v5H7zm4-3h2v8h-2zm4-3h2v11h-2z"/></svg>
+        <span>לא נמצאו פרויקטים תואמים לחיפוש שלך</span>
+      </div>
     </div>
 
     <div class="footer">
@@ -159,51 +256,109 @@ a:hover { text-decoration: underline; }
   </div>
 </div>
 
-<!-- מודאל עריכה -->
-<div id="modalWrap" style="display:none">
-  <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
-    <div class="modal">
-      <h2 id="modalTitle">פרויקט חדש</h2>
-      <div class="form-grid">
-        <div class="form-group full"><label>שם עבודה *</label><input id="f_name" placeholder="שם הפרויקט"></div>
-        <div class="form-group"><label>שלב בועדה</label>
-          <select id="f_stage"><option value="">—</option>
-            <option>בבקשה למידע</option><option>בבקשה להיתר</option>
-            <option>בבקרה מרחבית</option><option>בתכן</option><option>תב"ע</option>
-          </select>
-        </div>
-        <div class="form-group"><label>עדיפות</label>
-          <select id="f_priority">
-            <option>דחוף מאוד</option><option>דחוף</option>
-            <option selected>חשוב</option><option>רגיל</option>
-          </select>
-        </div>
-        <div class="form-group"><label>איפה זה עומד</label>
-          <select id="f_status">
-            <option>בטיפול משרדי</option>
-            <option>בטיפול גורם מאשר</option>
-            <option>בטיפול רישוי זמין</option>
-          </select>
-        </div>
-        <div class="form-group"><label>מי עובד על זה</label><input id="f_worker" placeholder="שם"></div>
-        <div class="form-group"><label>תאריך התחלה</label><input type="date" id="f_startDate"></div>
-        <div class="form-group"><label>מספר בקשה</label><input id="f_reqNum" placeholder="10000..."></div>
-        <div class="form-group"><label>שלב תשלום</label>
-          <select id="f_payment"><option value="">—</option>
-            <option>מקדמה</option><option>לא התקבל תשלום</option><option>שולם</option>
-          </select>
-        </div>
-        <div class="form-group full"><label>תהליך</label><input id="f_process" placeholder="תיאור השלב הנוכחי"></div>
-        <div class="form-group full"><label>הערות</label><textarea id="f_notes" placeholder="הערות נוספות"></textarea></div>
-        <div class="form-group full"><label>לינק רישוי</label><input id="f_link" placeholder="https://rishuybniya.moin.gov.il/..."></div>
-        <div class="form-group full"><label>נתיב קובץ (W:\...)</label><input id="f_filepath" placeholder="W:\aaw-2017\..."></div>
-        <div class="form-group full"><label>הערות ועדה</label><input id="f_committeeNotes" placeholder="הערות מהועדה"></div>
+<!-- מודאל עריכה / יצירה כללי (ללא תשלומים!) -->
+<div id="modalWrap" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h2 id="modalTitle">פרויקט חדש</h2>
+    <div class="form-grid">
+      <div class="form-group full"><label>שם עבודה *</label><input id="f_name" placeholder="הכנס את שם הפרויקט המלא"></div>
+      <div class="form-group"><label>שלב בועדה</label>
+        <select id="f_stage"><option value="">— בחירה —</option>
+          <option>בבקשה למידע</option><option>בבקשה להיתר</option>
+          <option>בבקרה מרחבית</option><option>בתכן</option><option>תב"ע</option>
+        </select>
       </div>
-      <div class="modal-actions">
-        <button class="btn btn-primary" onclick="saveProject()">שמור</button>
-        <button class="btn" onclick="closeModal()">ביטול</button>
-        <button class="btn btn-danger" id="deleteBtn" onclick="deleteProject()" style="margin-right:auto;display:none">מחק פרויקט</button>
+      <div class="form-group"><label>עדיפות</label>
+        <select id="f_priority">
+          <option>דחוף מאוד</option><option>דחוף</option>
+          <option selected>חשוב</option><option>רגיל</option>
+        </select>
       </div>
+      <div class="form-group"><label>איפה זה עומד כרגע?</label>
+        <select id="f_status">
+          <option>בטיפול משרדי</option>
+          <option>בטיפול גורם מאשר</option>
+          <option>בטיפול רישוי זמין</option>
+        </select>
+      </div>
+      <div class="form-group"><label>אחראי במשרד</label><input id="f_worker" placeholder="שם העובד המטפל"></div>
+      <div class="form-group"><label>תאריך התחלה</label><input type="date" id="f_startDate"></div>
+      <div class="form-group"><label>מספר בקשה</label><input id="f_reqNum" placeholder="למשל: 20230123..."></div>
+      <!-- שדה תשלום הוסר מכאן לחלוטין כדי שהעובדים לא יראו -->
+      <div class="form-group full"><label>תיאור השלב הנוכחי (תהליך)</label><input id="f_process" placeholder="מה בדיוק קורה עכשיו?"></div>
+      <div class="form-group full"><label>הערות / חסרים</label><textarea id="f_notes" placeholder="פרטים נוספים, מסמכים שחסרים, שיחות טלפון..."></textarea></div>
+      <div class="form-group"><label>לינק רישוי זמין</label><input id="f_link" placeholder="https://rishuy..."></div>
+      <div class="form-group"><label>נתיב תיקיה בשרת</label><input id="f_filepath" placeholder="W:\..."></div>
+      <div class="form-group full"><label>הערות הועדה</label><input id="f_committeeNotes" placeholder="דרישות אחרונות מהועדה"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveProject()">שמור פרויקט</button>
+      <button class="btn" onclick="closeModal()">ביטול</button>
+      <button class="btn btn-danger" id="deleteBtn" onclick="deleteProject()" style="margin-right:auto;display:none">מחק פרויקט</button>
+    </div>
+  </div>
+</div>
+
+<!-- מסך תשלומים ראשי (מוגן סיסמה) -->
+<div id="paymentsWrap" class="modal-overlay" onclick="if(event.target===this)closePayments()">
+  <div class="modal" style="max-width: 95vw; width: 95%; max-height: 90vh;">
+    <h2>ניהול שכר טרחה ותשלומים (סודי)</h2>
+    <p style="font-size:14px; color:var(--text2); margin-top:-10px; margin-bottom:15px;">המידע במסך זה חסוי ואינו חשוף לעובדי המשרד במסכים הרגילים.</p>
+    
+    <div style="max-height: 55vh; overflow-x: auto; border: 1px solid var(--border); border-radius: 8px;">
+      <table class="payments-table" style="min-width: 900px;">
+        <thead>
+          <tr>
+            <th style="width:25%">שם פרויקט</th>
+            <th>סה"כ ש"ט</th>
+            <th>שולם עד כה</th>
+            <th>יתרה לתשלום</th>
+            <th>תאריך תשלום</th>
+            <th>מס' חשבונית</th>
+            <th>סטטוס</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="paymentsBody"></tbody>
+        <tfoot style="background:#f0f0f0; font-weight:700; border-top:2px solid var(--border);">
+          <tr>
+            <td style="padding:12px 16px;">סה"כ כל הפרויקטים</td>
+            <td id="sum-total-fee" style="padding:12px 16px; color:var(--blue);">₪ 0</td>
+            <td id="sum-total-paid" style="padding:12px 16px; color:var(--green);">₪ 0</td>
+            <td id="sum-total-remaining" style="padding:12px 16px; color:var(--red);">₪ 0</td>
+            <td colspan="3"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    
+    <div class="modal-actions">
+      <button class="btn" onclick="closePayments()">סגור מערכת תשלומים</button>
+    </div>
+  </div>
+</div>
+
+<!-- חלונית עריכת תשלום ספציפי (מופיעה רק מתוך המסך הסודי) -->
+<div id="paymentEditWrap" class="modal-overlay" onclick="if(event.target===this)closePaymentEdit()" style="z-index: 105;">
+  <div class="modal" style="max-width: 500px; padding: 2rem; width: 95%; max-height: 90vh; overflow-y: auto;">
+    <h2 style="font-size:18px; margin-bottom:1rem;" id="payEditTitle">ניהול תשלומים</h2>
+    <div class="form-group" style="margin-bottom:12px;">
+      <label>סה"כ שכר טרחה (₪)</label>
+      <input type="number" id="pay_total" placeholder="למשל: 50000">
+    </div>
+    <div style="margin-bottom:15px;">
+        <label>פירוט תשלומים:</label>
+        <div style="overflow-x: auto; margin-top:10px;">
+          <table style="width:100%; border-collapse:collapse; min-width: 300px;">
+              <thead><tr style="background:#f4f4f4;"><th>תאריך</th><th>סכום</th><th>חשבונית</th><th></th></tr></thead>
+              <tbody id="pay_list_body"></tbody>
+          </table>
+        </div>
+        <button class="btn" style="margin-top:10px; width:100%;" onclick="addPayRow()">+ הוסף תשלום</button>
+    </div>
+    <div class="modal-actions" style="margin-top:10px; padding-top:10px; border-top:1px solid #ddd;">
+      <button class="btn btn-primary" onclick="savePaymentDetails()">שמור נתונים</button>
+      <button class="btn" onclick="closePaymentEdit()">ביטול</button>
     </div>
   </div>
 </div>
@@ -212,6 +367,7 @@ a:hover { text-decoration: underline; }
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <script>
+// הגדרות Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAmUKsBA9iRNdl7Vz_h4AWqZOhvvmNP4fA",
   authDomain: "maanarch-5d5ee.firebaseapp.com",
@@ -226,8 +382,22 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 const PRIORITY_COLORS = {"דחוף מאוד":"badge-red","דחוף":"badge-amber","חשוב":"badge-blue","רגיל":"badge-gray"};
-const PRIORITY_DOT = {"דחוף מאוד":"#E24B4A","דחוף":"#EF9F27","חשוב":"#378ADD","רגיל":"#888780"};
-let projects = [], currentTab = 'הכל', editingId = null, unsubscribe = null;
+const AVATAR_COLORS = ["", "avatar-red", "avatar-amber", "avatar-green"];
+let projects = [], currentTab = 'הכל', editingId = null, currentPayEditId = null, unsubscribe = null;
+
+function getInitials(name) {
+  if(!name || name === '—') return '?';
+  const parts = name.trim().split(' ');
+  if(parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+  return (parts[0][0] + parts[1][0]).toUpperCase();
+}
+
+function getAvatarClass(name) {
+  if(!name || name === '—') return '';
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
 
 // AUTH
 auth.onAuthStateChanged(user => {
@@ -250,7 +420,7 @@ function doLogin() {
   err.textContent = '';
   if(!email || !pass) { err.textContent = 'יש למלא אימייל וסיסמה'; return; }
   auth.signInWithEmailAndPassword(email, pass).catch(e => {
-    err.textContent = e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found'
+    err.textContent = e.code.includes('user-not-found') || e.code.includes('wrong-password') || e.code.includes('invalid-credential')
       ? 'אימייל או סיסמה שגויים' : 'שגיאת כניסה, נסה שנית';
   });
 }
@@ -262,11 +432,15 @@ function startListener() {
   if(unsubscribe) unsubscribe();
   unsubscribe = db.collection('projects').orderBy('lastUpdate','desc').onSnapshot(snap => {
     projects = snap.docs.map(d=>({id:d.id,...d.data()}));
-    renderTable(); updateCounts();
-    document.getElementById('lastSync').textContent = 'עדכון: ' + new Date().toLocaleTimeString('he-IL');
-  }, () => {
-    document.getElementById('connStatus').className = 'conn-status conn-err';
-    document.getElementById('connStatus').textContent = 'שגיאת חיבור';
+    renderTable(); 
+    updateCounts();
+    document.getElementById('lastSync').textContent = 'עודכן לאחרונה: ' + new Date().toLocaleTimeString('he-IL');
+    
+    if(document.getElementById('paymentsWrap').classList.contains('open')) {
+      renderPayments();
+    }
+  }, (error) => {
+    console.error("Firebase error:", error);
   });
 }
 
@@ -276,7 +450,8 @@ function getFiltered() {
   const fw = document.getElementById('filterWorker').value;
   const fs = document.getElementById('filterStage').value;
   return projects.filter(p => {
-    if(q && !(p.name||'').toLowerCase().includes(q)) return false;
+    const matchSearch = (p.name||'').toLowerCase().includes(q) || (p.reqNum||'').toLowerCase().includes(q);
+    if(q && !matchSearch) return false;
     if(fp && p.priority!==fp) return false;
     if(fw && p.worker!==fw) return false;
     if(fs && p.stage!==fs) return false;
@@ -290,6 +465,12 @@ function updateCounts() {
     const el = document.getElementById('cnt-'+s);
     if(el) el.textContent = s==='הכל' ? projects.length : projects.filter(p=>p.status===s).length;
   });
+
+  document.getElementById('statTotal').textContent = projects.length;
+  document.getElementById('statUrgent').textContent = projects.filter(p => p.priority === 'דחוף מאוד' || p.priority === 'דחוף').length;
+  document.getElementById('statOffice').textContent = projects.filter(p => p.status === 'בטיפול משרדי').length;
+  document.getElementById('statRishuy').textContent = projects.filter(p => p.status === 'בטיפול רישוי זמין').length;
+
   const workers = [...new Set(projects.map(p=>p.worker).filter(Boolean))];
   const fw = document.getElementById('filterWorker');
   const cur = fw.value;
@@ -300,28 +481,58 @@ function renderTable() {
   const filtered = getFiltered();
   const tbody = document.getElementById('tableBody');
   const empty = document.getElementById('emptyState');
-  document.getElementById('countLabel').textContent = filtered.length + ' פרויקטים';
-  if(!filtered.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
+  document.getElementById('countLabel').textContent = `מציג ${filtered.length} מתוך ${projects.length} פרויקטים`;
+  
+  if(!filtered.length) { 
+    tbody.innerHTML=''; 
+    empty.style.display='flex'; 
+    return; 
+  }
+  
   empty.style.display='none';
   tbody.innerHTML = filtered.map(p => {
-    const badge = PRIORITY_COLORS[p.priority]||'badge-gray';
-    const dot = PRIORITY_DOT[p.priority]||'#888';
-    const upd = (p.lastUpdate||'').toString().slice(0,10);
-    const shortName = (p.worker||'').split(' ')[0]||'—';
-    const linkCell = p.link
-      ? `<a href="${p.link}" target="_blank" onclick="event.stopPropagation()">🔗</a>`
-      : (p.filepath ? `<span title="${p.filepath}">📁</span>` : '—');
-    return `<tr ondblclick="openEdit('${p.id}')">
-      <td><span class="priority-dot" style="background:${dot}"></span><strong style="font-weight:500">${p.name}</strong>${p.process?`<br><span style="font-size:11px;color:#888">${p.process}</span>`:''}</td>
-      <td style="font-size:12px">${p.stage||'—'}</td>
-      <td><span class="badge ${badge}">${p.priority||'—'}</span></td>
-      <td style="font-size:12px;color:#888">${p.status||'—'}</td>
-      <td style="font-size:12px">${shortName}</td>
-      <td style="font-size:11px;color:#888">${upd}</td>
-      <td style="font-size:11px">${p.reqNum||'—'}</td>
-      <td style="font-size:11px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${p.notes||''}">${p.notes||'—'}</td>
-      <td style="text-align:center">${linkCell}</td>
-      <td><button class="btn" style="padding:3px 8px;font-size:11px" onclick="event.stopPropagation();openEdit('${p.id}')">עריכה</button></td>
+    const isVeryUrgent = p.priority === 'דחוף מאוד';
+    const rowClass = isVeryUrgent ? 'row-urgent' : '';
+    const badge = PRIORITY_COLORS[p.priority] || 'badge-gray';
+    const updDate = p.lastUpdate ? p.lastUpdate.split('-').reverse().join('/') : '—'; 
+    const workerName = p.worker || '—';
+    const avatarInitials = getInitials(workerName);
+    const avClass = getAvatarClass(workerName);
+
+    const p_filepath = p.filepath ? p.filepath.replace(/\\/g, '\\\\').replace(/'/g, "\\'") : '';
+
+    const linkCell = `
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        ${p.link ? `<a href="${p.link}" target="_blank" title="רישוי זמין" onclick="event.stopPropagation()" style="font-size:16px;">🔗</a>` : ''}
+        ${p.filepath ? `<span title="לחץ להעתקת נתיב: ${p.filepath}" onclick="event.stopPropagation(); copyPath('${p_filepath}')" style="cursor:pointer;font-size:16px;transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">📁</span>` : ''}
+      </div>`;
+
+    return `<tr class="${rowClass}" ondblclick="openEdit('${p.id}')">
+      <td>
+        <div style="font-weight:600; color:var(--text); font-size:15px; margin-bottom:4px;">${p.name}</div>
+        ${p.process ? `<div style="font-size:12px; color:var(--blue); font-weight:500;">${p.process}</div>` : ''}
+      </td>
+      <td><span class="badge ${badge}">${p.priority || '—'}</span></td>
+      <td>
+        <div style="font-weight:500; font-size:13px;">${p.status || '—'}</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${p.stage || ''}</div>
+      </td>
+      <td>
+        <div class="worker-cell">
+          <div class="avatar ${avClass}">${avatarInitials}</div>
+          <span style="font-size:13px; font-weight:500;">${workerName}</span>
+        </div>
+      </td>
+      <td style="font-size:12px; color:var(--text2); font-weight:500;">${updDate}</td>
+      <td>
+        <div style="font-size:12px; color:var(--text2); line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;" title="${p.notes||''}">
+          ${p.notes || 'אין הערות'}
+        </div>
+      </td>
+      <td>${linkCell}</td>
+      <td style="text-align:left;">
+        <button class="btn btn-sm" onclick="event.stopPropagation();openEdit('${p.id}')">עריכה</button>
+      </td>
     </tr>`;
   }).join('');
 }
@@ -337,10 +548,10 @@ function openAdd() {
   editingId = null;
   document.getElementById('modalTitle').textContent = 'פרויקט חדש';
   document.getElementById('deleteBtn').style.display = 'none';
-  ['f_name','f_stage','f_worker','f_startDate','f_reqNum','f_payment','f_process','f_notes','f_link','f_filepath','f_committeeNotes'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  ['f_name','f_stage','f_worker','f_startDate','f_reqNum','f_process','f_notes','f_link','f_filepath','f_committeeNotes'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
   document.getElementById('f_priority').value = 'חשוב';
   document.getElementById('f_status').value = 'בטיפול משרדי';
-  document.getElementById('modalWrap').style.display = 'block';
+  document.getElementById('modalWrap').classList.add('open');
 }
 
 function openEdit(id) {
@@ -355,20 +566,21 @@ function openEdit(id) {
   document.getElementById('f_worker').value = p.worker||'';
   document.getElementById('f_startDate').value = p.startDate||'';
   document.getElementById('f_reqNum').value = p.reqNum||'';
-  document.getElementById('f_payment').value = p.payment||'';
   document.getElementById('f_process').value = p.process||'';
   document.getElementById('f_notes').value = p.notes||'';
   document.getElementById('f_link').value = p.link||'';
   document.getElementById('f_filepath').value = p.filepath||'';
   document.getElementById('f_committeeNotes').value = p.committeeNotes||'';
-  document.getElementById('modalWrap').style.display = 'block';
+  document.getElementById('modalWrap').classList.add('open');
 }
 
-function closeModal() { document.getElementById('modalWrap').style.display='none'; }
+function closeModal() { 
+  document.getElementById('modalWrap').classList.remove('open'); 
+}
 
 function saveProject() {
   const name = document.getElementById('f_name').value.trim();
-  if(!name) { alert('יש להכניס שם עבודה'); return; }
+  if(!name) { alert('חובה להזין את שם העבודה'); return; }
   const data = {
     name, stage: document.getElementById('f_stage').value,
     priority: document.getElementById('f_priority').value,
@@ -376,7 +588,6 @@ function saveProject() {
     worker: document.getElementById('f_worker').value.trim(),
     startDate: document.getElementById('f_startDate').value,
     reqNum: document.getElementById('f_reqNum').value.trim(),
-    payment: document.getElementById('f_payment').value,
     process: document.getElementById('f_process').value.trim(),
     notes: document.getElementById('f_notes').value.trim(),
     link: document.getElementById('f_link').value.trim(),
@@ -384,16 +595,166 @@ function saveProject() {
     committeeNotes: document.getElementById('f_committeeNotes').value.trim(),
     lastUpdate: new Date().toISOString().split('T')[0]
   };
+  
   if(editingId) db.collection('projects').doc(editingId).update(data);
   else db.collection('projects').add(data);
   closeModal();
 }
 
 function deleteProject() {
-  if(!editingId || !confirm('למחוק פרויקט זה?')) return;
+  if(!editingId || !confirm('האם אתה בטוח שברצונך למחוק פרויקט זה לחלוטין?')) return;
   db.collection('projects').doc(editingId).delete();
   closeModal();
 }
+
+function copyPath(path) {
+  navigator.clipboard.writeText(path).then(() => {
+    alert('הועתק בהצלחה: \n' + path + '\n\nכעת ניתן להדביק (Ctrl+V) היכן שצריך.');
+  }).catch(err => {
+    alert('שגיאה בהעתקה');
+  });
+}
+
+/* --------------- מערכת תשלומים חסויה --------------- */
+
+function openPaymentsAuth() {
+  const code = prompt("מערכת סודית - הכנס קוד הרשאה:");
+  if (code === '3777') {
+    document.getElementById('paymentsWrap').classList.add('open');
+    renderPayments();
+  } else if (code !== null && code !== '') {
+    alert("קוד שגוי. הגישה נדחתה.");
+  }
+}
+
+function closePayments() {
+  document.getElementById('paymentsWrap').classList.remove('open');
+}
+
+function renderPayments() {
+  const tbody = document.getElementById('paymentsBody');
+  
+  let sortedProjects = [...projects].sort((a, b) => {
+    const statA = a.payStatus || '';
+    const statB = b.payStatus || '';
+    if (statA === 'חוב' && statB !== 'חוב') return -1;
+    if (statB === 'חוב' && statA !== 'חוב') return 1;
+    return 0;
+  });
+
+  // חישוב סכומים כוללים
+  let totalFee = 0, totalPaid = 0;
+
+  tbody.innerHTML = sortedProjects.map(p => {
+    const total = p.payTotal ? parseInt(p.payTotal) : 0;
+    
+    // חישוב סכום התשלומים מה-payments array
+    const paymentsList = p.payments || [];
+    const paid = paymentsList.reduce((sum, pay) => sum + (parseInt(pay.amount) || 0), 0);
+    const balance = total - paid;
+    
+    totalFee += total;
+    totalPaid += paid;
+    
+    // תאריך התשלום האחרון
+    const payDate = paymentsList.length > 0 && paymentsList[paymentsList.length - 1].date 
+      ? paymentsList[paymentsList.length - 1].date 
+      : '—';
+    
+    const invoice = p.payInvoice || '—';
+    const status = p.payStatus || 'טרם עודכן';
+    
+    let statusBadge = `<span class="badge badge-gray">${status}</span>`;
+    if(status === 'חוב') statusBadge = `<span class="badge badge-red">חוב!</span>`;
+    if(status === 'מקדמה') statusBadge = `<span class="badge badge-amber">מקדמה</span>`;
+    if(status === 'שולם') statusBadge = `<span class="badge badge-green" style="background:var(--green-light); color:var(--green); border:1px solid rgba(30,142,62,0.2);">שולם במלואו</span>`;
+
+    return `<tr>
+      <td style="font-weight:600; color:var(--text);">${p.name}</td>
+      <td style="font-weight:500;">₪${total.toLocaleString()}</td>
+      <td style="color:var(--green); font-weight:500;">₪${paid.toLocaleString()}</td>
+      <td style="font-weight:700; color:${balance > 0 ? 'var(--red)' : 'var(--text)'};" dir="ltr">₪${balance.toLocaleString()}</td>
+      <td style="font-size:13px; color:var(--text2);">${payDate}</td>
+      <td style="font-size:13px; color:var(--text2);">${invoice}</td>
+      <td>${statusBadge}</td>
+      <td><button class="btn btn-sm btn-gold" onclick="openPaymentEdit('${p.id}')">✏️ עדכון</button></td>
+    </tr>`;
+  }).join('');
+  
+  // עדכון הסכומים בשורת הסיכום
+  const totalRemaining = totalFee - totalPaid;
+  const summaryFeeEl = document.getElementById('sum-total-fee');
+  const summaryPaidEl = document.getElementById('sum-total-paid');
+  const summaryRemainingEl = document.getElementById('sum-total-remaining');
+  
+  if(summaryFeeEl) summaryFeeEl.textContent = '₪ ' + totalFee.toLocaleString();
+  if(summaryPaidEl) summaryPaidEl.textContent = '₪ ' + totalPaid.toLocaleString();
+  if(summaryRemainingEl) summaryRemainingEl.textContent = '₪ ' + totalRemaining.toLocaleString();
+}
+
+function openPaymentEdit(id) {
+  const p = projects.find(x=>x.id===id); if(!p) return;
+  currentPayEditId = id;
+  document.getElementById('payEditTitle').textContent = `ניהול תשלומים: ${p.name}`;
+  document.getElementById('pay_total').value = p.payTotal || '';
+  
+  // טעינת רשימת התשלומים הדינמית
+  const payments = p.payments || [];
+  const tbody = document.getElementById('pay_list_body');
+  tbody.innerHTML = payments.map((pay, index) => `
+    <tr>
+      <td><input type="date" value="${pay.date||''}" onchange="updatePayRow(${index}, 'date', this.value)"></td>
+      <td><input type="number" value="${pay.amount||''}" onchange="updatePayRow(${index}, 'amount', this.value)" placeholder="₪"></td>
+      <td><input type="text" value="${pay.invoice||''}" onchange="updatePayRow(${index}, 'invoice', this.value)" placeholder="מספר"></td>
+      <td><button class="btn btn-danger btn-sm" onclick="removePayRow(${index})">מחיקה</button></td>
+    </tr>
+  `).join('');
+  
+  document.getElementById('paymentEditWrap').classList.add('open');
+}
+
+function addPayRow() {
+  const p = projects.find(x=>x.id===currentPayEditId);
+  if(!p.payments) p.payments = [];
+  p.payments.push({date: '', amount: '', invoice: ''});
+  openPaymentEdit(currentPayEditId);
+}
+
+function updatePayRow(index, field, value) {
+  const p = projects.find(x=>x.id===currentPayEditId);
+  p.payments[index][field] = value;
+}
+
+function removePayRow(index) {
+  const p = projects.find(x=>x.id===currentPayEditId);
+  p.payments.splice(index, 1);
+  openPaymentEdit(currentPayEditId);
+}
+
+function closePaymentEdit() {
+  document.getElementById('paymentEditWrap').classList.remove('open');
+  // עדכון הטבלה בחלון הראשי
+  setTimeout(() => {
+    if(document.getElementById('paymentsWrap').classList.contains('open')) {
+      renderPayments();
+    }
+  }, 100);
+}
+
+function savePaymentDetails() {
+  if(!currentPayEditId) return;
+  const p = projects.find(x=>x.id===currentPayEditId);
+  const data = {
+    payTotal: document.getElementById('pay_total').value,
+    payments: p.payments || [],
+    lastUpdate: new Date().toISOString().split('T')[0]
+  };
+  
+  // עדכון ב-Firebase
+  db.collection('projects').doc(currentPayEditId).update(data);
+  closePaymentEdit();
+}
+
 </script>
 </body>
 </html>
